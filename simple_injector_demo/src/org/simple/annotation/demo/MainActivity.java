@@ -1,15 +1,15 @@
 
 package org.simple.annotation.demo;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.TextView;
 
 import org.simple.injector.SimpleDagger;
 import org.simple.injector.ViewInjector;
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
 
     @ViewInjector(R.id.my_tv)
     protected TextView mTextView;
@@ -21,6 +21,9 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        getSupportFragmentManager().beginTransaction().add(R.id.container, new TestFragment())
+                .commit();
 
         SimpleDagger.inject(this);
 

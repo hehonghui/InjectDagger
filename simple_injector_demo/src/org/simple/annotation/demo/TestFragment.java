@@ -26,19 +26,28 @@ package org.simple.annotation.demo;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.simple.injector.SimpleDagger;
 import org.simple.injector.ViewInjector;
 
 public class TestFragment extends Fragment {
-    @ViewInjector(R.id.my_tv)
+    @ViewInjector(R.id.fragment_tv)
     TextView textView;
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
+        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+        SimpleDagger.inject(this, rootView);
+
+        if (textView != null) {
+            Log.e(getTag(), "### my text view in fragment : " + textView.getText());
+        }
+        return rootView;
     }
 }

@@ -8,8 +8,8 @@ import org.simple.injector.util.ViewFinder;
 public class MainActivity$ViewAdapter implements ViewAdapter<MainActivity> { 
 
   public void findViews(MainActivity target)  { 
-      target.mTextView2 =  ViewFinder.findViewById(target, 2131099649  ) ; 
       target.mTextView =  ViewFinder.findViewById(target, 2131099648  ) ; 
+      target.mTextView2 =  ViewFinder.findViewById(target, 2131099649  ) ; 
   }
 
  } 

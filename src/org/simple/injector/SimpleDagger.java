@@ -32,6 +32,7 @@ import android.view.View;
 import org.simple.injector.adapter.NullAdapter;
 import org.simple.injector.adapter.ViewAdapter;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,8 +60,43 @@ public final class SimpleDagger {
     /**
      * @param fragment
      */
-    public static void inject(Fragment fragment) {
+    public static void inject(Fragment fragment, View rootView) {
+        ViewAdapter<Fragment> adapter = getViewAdapter(fragment.getClass());
+        if (fuckTheFragment(fragment, rootView)) {
+            adapter.findViews(fragment);
+        }
+    }
 
+    /**
+     * 到Fragment 中找到mView字段,然后设置rootView给mView
+     * 
+     * @param fragment
+     * @param rootView
+     * @return
+     */
+    private static boolean fuckTheFragment(Fragment fragment, View rootView) {
+        try {
+            Class<?> v4fragmentClass = fragment.getClass();
+            while (v4fragmentClass != Object.class
+                    && !v4fragmentClass.equals(Fragment.class)) {
+                v4fragmentClass = v4fragmentClass.getSuperclass();
+            }
+            Field rootViewField = v4fragmentClass.getDeclaredField("mView");
+            rootViewField.setAccessible(true);
+            rootViewField.set(fragment, rootView);
+            Log.e("", "### getView " + fragment.getView()) ;
+            return true;
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
     /**

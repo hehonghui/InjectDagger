@@ -8,7 +8,7 @@ import org.simple.injector.util.ViewFinder;
 public class TestFragment$ViewAdapter implements ViewAdapter<TestFragment> { 
 
   public void findViews(TestFragment target)  { 
-      target.textView =  ViewFinder.findViewById(target, 2131099648  ) ; 
+      target.textView =  ViewFinder.findViewById(target, 2131099651  ) ; 
   }
 
  } 

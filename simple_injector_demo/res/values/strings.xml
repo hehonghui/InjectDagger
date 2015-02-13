@@ -3,5 +3,7 @@
 
     <string name="app_name">simple_annotation_demo</string>
     <string name="hello_world">Hello world!</string>
+    <string name="sec">Second</string>
+    <string name="fragment">This is in fragment</string>
 
 </resources>
