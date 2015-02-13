@@ -22,32 +22,29 @@
  * THE SOFTWARE.
  */
 
-package org.simple.annotation.demo;
+package org.simple.injector.anno.handler;
 
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import java.util.List;
+import java.util.Map;
 
-import org.simple.injector.SimpleDagger;
-import org.simple.injector.anno.ViewInjector;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.annotation.processing.RoundEnvironment;
+import javax.lang.model.element.VariableElement;
 
-public class TestFragment extends Fragment {
-    @ViewInjector(R.id.fragment_tv)
-    TextView textView;
+/**
+ * 注解处理接口
+ * 
+ * @author mrsimple
+ */
+public interface AnnotationHandler {
+    /**
+     * @param processingEnv
+     */
+    void attachProcessingEnv(ProcessingEnvironment processingEnv);
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
-        SimpleDagger.inject(this, rootView);
-
-        if (textView != null) {
-            Log.e(getTag(), "### my text view in fragment : " + textView.getText());
-        }
-        return rootView;
-    }
+    /**
+     * @param roundEnv
+     * @return
+     */
+    Map<String, List<VariableElement>> handleAnnotation(RoundEnvironment roundEnv);
 }

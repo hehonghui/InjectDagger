@@ -24,9 +24,11 @@
 
 package org.simple.injector.apt.writer;
 
-import org.simple.injector.apt.ViewInjectorProcessor.InjectorInfo;
+import org.simple.injector.SimpleDagger;
+import org.simple.injector.util.AnnotationUtil;
 import org.simple.injector.util.IOUtil;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Iterator;
@@ -36,7 +38,6 @@ import java.util.Map.Entry;
 
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.tools.JavaFileObject;
@@ -94,7 +95,7 @@ public abstract class AbsWriter implements AdapterWriter {
      */
     protected InjectorInfo createInjectorInfo(VariableElement element) {
         TypeElement typeElement = (TypeElement) element.getEnclosingElement();
-        String packageName = getPackageName(typeElement);
+        String packageName = AnnotationUtil.getPackageName(mProcessingEnv, typeElement);
         String className = typeElement.getSimpleName().toString();
         return new InjectorInfo(packageName, className);
     }
@@ -123,11 +124,33 @@ public abstract class AbsWriter implements AdapterWriter {
     protected abstract void writeEnd(Writer writer) throws IOException;
 
     /**
-     * @param element
-     * @return
+     * 注解相关的信息实体类
+     * 
+     * @author mrsimple
      */
-    protected String getPackageName(Element element) {
-        return mProcessingEnv.getElementUtils().getPackageOf(element).getQualifiedName().toString();
+    public static class InjectorInfo {
+        /**
+         * 被注解的类的包名
+         */
+        public String packageName;
+        /**
+         * 被注解的类的类名
+         */
+        public String classlName;
+        /**
+         * 要创建的InjectAdapter类的完整路径,新类的名字为被注解的类名 + "$InjectAdapter", 与被注解的类在同一个包下
+         */
+        public String newClassName;
+
+        public InjectorInfo(String packageName, String classlName) {
+            this.packageName = packageName;
+            newClassName = classlName + SimpleDagger.SUFFIX;
+            this.classlName = classlName;
+        }
+
+        public String getClassFullPath() {
+            return packageName + File.separator + newClassName;
+        }
     }
 
 }

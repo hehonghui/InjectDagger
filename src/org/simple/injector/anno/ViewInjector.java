@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package org.simple.injector;
+package org.simple.injector.anno;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

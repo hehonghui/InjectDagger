@@ -24,10 +24,10 @@
 
 package org.simple.injector.adapter;
 
-public class NullAdapter<T> implements ViewAdapter<T> {
+public class NullAdapter<T> implements InjectAdapter<T> {
 
     @Override
-    public void findViews(T target) {
+    public void injects(T target) {
 
     }
 

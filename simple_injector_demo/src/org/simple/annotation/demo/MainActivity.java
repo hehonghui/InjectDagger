@@ -7,7 +7,7 @@ import android.util.Log;
 import android.widget.TextView;
 
 import org.simple.injector.SimpleDagger;
-import org.simple.injector.ViewInjector;
+import org.simple.injector.anno.ViewInjector;
 
 public class MainActivity extends FragmentActivity {
 

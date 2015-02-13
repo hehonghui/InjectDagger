@@ -33,5 +33,8 @@ import javax.lang.model.element.VariableElement;
  * @author mrsimple
  */
 public interface AdapterWriter {
+    /**
+     * @param typeMap
+     */
     void generate(Map<String, List<VariableElement>> typeMap);
 }

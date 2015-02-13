@@ -24,11 +24,10 @@
 
 package org.simple.injector.adapter;
 
-
 /**
  * @author mrsimple
  * @param <T>
  */
-public interface ViewAdapter<T> {
-    void findViews(T target);
+public interface InjectAdapter<T> {
+    void injects(T target);
 }

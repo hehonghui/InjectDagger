@@ -30,7 +30,7 @@ import android.util.Log;
 import android.view.View;
 
 import org.simple.injector.adapter.NullAdapter;
-import org.simple.injector.adapter.ViewAdapter;
+import org.simple.injector.adapter.InjectAdapter;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -47,23 +47,23 @@ public final class SimpleDagger {
     /**
      * 
      */
-    static Map<Class<?>, ViewAdapter<?>> sInjectCache = new HashMap<Class<?>, ViewAdapter<?>>();
+    static Map<Class<?>, InjectAdapter<?>> sInjectCache = new HashMap<Class<?>, InjectAdapter<?>>();
 
     /**
      * @param activity
      */
     public static void inject(Activity activity) {
-        ViewAdapter<Activity> adapter = getViewAdapter(activity.getClass());
-        adapter.findViews(activity);
+        InjectAdapter<Activity> adapter = getViewAdapter(activity.getClass());
+        adapter.injects(activity);
     }
 
     /**
      * @param fragment
      */
     public static void inject(Fragment fragment, View rootView) {
-        ViewAdapter<Fragment> adapter = getViewAdapter(fragment.getClass());
+        InjectAdapter<Fragment> adapter = getViewAdapter(fragment.getClass());
         if (fuckTheFragment(fragment, rootView)) {
-            adapter.findViews(fragment);
+            adapter.injects(fragment);
         }
     }
 
@@ -109,13 +109,13 @@ public final class SimpleDagger {
     @SuppressWarnings({
             "unchecked", "rawtypes"
     })
-    private static <T> ViewAdapter<T> getViewAdapter(Class<?> clazz) {
-        ViewAdapter<?> adapter = sInjectCache.get(clazz);
+    private static <T> InjectAdapter<T> getViewAdapter(Class<?> clazz) {
+        InjectAdapter<?> adapter = sInjectCache.get(clazz);
         if (adapter == null) {
             String adapterClassName = clazz.getName() + SUFFIX;
             try {
                 Class<?> adapterClass = Class.forName(adapterClassName);
-                adapter = (ViewAdapter<?>) adapterClass.newInstance();
+                adapter = (InjectAdapter<?>) adapterClass.newInstance();
                 sInjectCache.put(adapterClass, adapter);
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();

@@ -22,32 +22,21 @@
  * THE SOFTWARE.
  */
 
-package org.simple.annotation.demo;
+package org.simple.injector.util;
 
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
 
-import org.simple.injector.SimpleDagger;
-import org.simple.injector.anno.ViewInjector;
-
-public class TestFragment extends Fragment {
-    @ViewInjector(R.id.fragment_tv)
-    TextView textView;
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
-        SimpleDagger.inject(this, rootView);
-
-        if (textView != null) {
-            Log.e(getTag(), "### my text view in fragment : " + textView.getText());
-        }
-        return rootView;
+/**
+ * @author mrsimple
+ */
+public final class AnnotationUtil {
+    /**
+     * @param processingEnv
+     * @param element
+     * @return
+     */
+    public static String getPackageName(ProcessingEnvironment processingEnv, Element element) {
+        return processingEnv.getElementUtils().getPackageOf(element).getQualifiedName().toString();
     }
 }

@@ -5,7 +5,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import org.simple.injector.ViewInjector;
+import org.simple.injector.anno.ViewInjector;
 
 public class TestActivity extends Activity {
 

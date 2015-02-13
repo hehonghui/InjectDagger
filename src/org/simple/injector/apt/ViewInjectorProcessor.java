@@ -26,12 +26,11 @@ package org.simple.injector.apt;
 
 import static javax.tools.Diagnostic.Kind.ERROR;
 
-import org.simple.injector.SimpleDagger;
-import org.simple.injector.ViewInjector;
-import org.simple.injector.apt.writer.DefaultJavaFileWriter;
+import org.simple.injector.anno.handler.AnnotationHandler;
+import org.simple.injector.anno.handler.ViewInjectHandler;
 import org.simple.injector.apt.writer.AdapterWriter;
+import org.simple.injector.apt.writer.DefaultJavaFileWriter;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -48,46 +47,51 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 
-@SupportedAnnotationTypes("org.simple.injector.*")
+/**
+ * @author mrsimple
+ */
+@SupportedAnnotationTypes("org.simple.injector.anno.*")
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class ViewInjectorProcessor extends AbstractProcessor {
 
+    /**
+     * 所有注解处理器的列表
+     */
+    List<AnnotationHandler> mHandlers = new LinkedList<AnnotationHandler>();
+    /**
+     * 类型与字段的关联表,用于在写入Java文件时按类型来写不同的文件和字段
+     */
     final Map<String, List<VariableElement>> map = new HashMap<String, List<VariableElement>>();
-
+    /**
+     * 
+     */
     AdapterWriter mWriter;
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
+        registerHandlers();
         mWriter = new DefaultJavaFileWriter(processingEnv);
+    }
+
+    /**
+     * 
+     */
+    private void registerHandlers() {
+        mHandlers.add(new ViewInjectHandler());
     }
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        Set<? extends Element> elementSet = roundEnv.getElementsAnnotatedWith(ViewInjector.class);
-        for (Element element : elementSet) {
-            // 注解的字段
-            VariableElement varElement = (VariableElement) element;
-            // 类型
-            TypeElement typeElement = (TypeElement) varElement.getEnclosingElement();
-            // 类型的完整路径名,比如某个Activity的完整路径
-            String className = getPackageName(typeElement) + "."
-                    + typeElement.getSimpleName().toString();
-            List<VariableElement> cacheElements = map.get(className);
-            if (cacheElements == null) {
-                cacheElements = new LinkedList<VariableElement>();
-            }
-
-            cacheElements.add(varElement);
-            map.put(className, cacheElements);
+        for (AnnotationHandler handler : mHandlers) {
+            // 关联ProcessingEnvironment
+            handler.attachProcessingEnv(processingEnv);
+            // 解析注解相关的信息
+            map.putAll(handler.handleAnnotation(roundEnv));
         }
-
+        // 将解析到的数据写入到具体的类型中
         mWriter.generate(map);
         return true;
-    }
-
-    private String getPackageName(Element element) {
-        return processingEnv.getElementUtils().getPackageOf(element).getQualifiedName().toString();
     }
 
     /**
@@ -100,23 +104,5 @@ public class ViewInjectorProcessor extends AbstractProcessor {
             message = String.format(message, args);
         }
         processingEnv.getMessager().printMessage(ERROR, message, element);
-    }
-
-    public static class InjectorInfo {
-
-        public String packageName;
-        public String newClassName;
-        public String classlName;
-
-        public InjectorInfo(String packageName, String classlName) {
-            this.packageName = packageName;
-            newClassName = classlName + SimpleDagger.SUFFIX;
-            this.classlName = classlName;
-        }
-
-        public String getClassFullPath() {
-            return packageName + File.separator + newClassName;
-        }
-
     }
 }
