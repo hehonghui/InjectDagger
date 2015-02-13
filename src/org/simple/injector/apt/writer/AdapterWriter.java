@@ -24,11 +24,14 @@
 
 package org.simple.injector.apt.writer;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.lang.model.element.VariableElement;
 
 /**
  * @author mrsimple
  */
 public interface AdapterWriter {
-    void generate(VariableElement element);
+    void generate(Map<String, List<VariableElement>> typeMap);
 }
