@@ -43,7 +43,7 @@ public final class SimpleDagger {
     /**
      * 
      */
-    public static final String SUFFIX = "$ViewAdapter";
+    public static final String SUFFIX = "$InjectAdapter";
     /**
      * 
      */

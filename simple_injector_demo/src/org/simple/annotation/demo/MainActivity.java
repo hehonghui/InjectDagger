@@ -25,8 +25,9 @@ public class MainActivity extends FragmentActivity {
         getSupportFragmentManager().beginTransaction().add(R.id.container, new TestFragment())
                 .commit();
 
+        // 
         SimpleDagger.inject(this);
-
+        
         if (mTextView != null) {
             Log.e("", "### my text view : " + mTextView.getText());
         }
