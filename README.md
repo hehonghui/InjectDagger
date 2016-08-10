@@ -1,4 +1,7 @@
 # InjectDagger
+
+* [基础知识](http://qiushao.net/2015/07/07/Annotation-Processing-Tool%E8%AF%A6%E8%A7%A3/)
+
 使用APT进行注解的库，类似于ButterKnife。目前只完成View id的注解，有兴趣的朋友可以参考一下。
 
 为了使用Annotation Processor Tools,在导入eclipse之后需要添加jre库的引用，步骤如图所示: 
